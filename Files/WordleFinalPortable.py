@@ -73,6 +73,8 @@ for i in range(WordNum):
     GuessWord = GuessWords.readline().strip()
 GuessWords.close()
 
+#REMOVE WORD LATER
+# GuessWord = "night"
 
 GuessWord = GuessWord.lower()
 for i in range(5):
