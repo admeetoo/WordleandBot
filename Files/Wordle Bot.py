@@ -2,9 +2,31 @@ import time
 
 wordfound = False
 greentext = "\033[0;32m"
+nocolor = "\033[0m"
+greytext = "\033[0;37m"
+redtext = "\033[0;31m"
+yellow = "\033[0;33m"
+pink = "\033[35m"
+
+def Yellow(word):
+    yellowWord = yellow+word+nocolor
+    return yellowWord
+
+def Pink(word):
+    PinkWord = pink+word+nocolor
+    return PinkWord
+
+def RedText(word):
+    redTextWord = redtext+word+nocolor
+    return redTextWord
+
 def GreenText(word):
     greenTextWord = greentext+word+nocolor
     return greenTextWord
+
+def GreyText(word):
+    greyTextWord = greytext+word+nocolor
+    return greyTextWord
 
 LettersFound = [False] * 26
 clicker = False
@@ -131,7 +153,10 @@ Welcome to Adam's wordle bot!
 
 Here is a quick rundown:-
 - You will enter your word, and will be prompted to enter the color returned by each letter in the word, in order.
-- You will enter the colors: "Green", "Orange", or "Grey" - (You may also use (1, 2, or 3)/("V", "O", "G"), respectively.)
+- You will enter the colors: "{GreenText("Green")}", "{RedText("Orange")}", or "{GreyText("Grey")}". 
+- (You may also use ({GreenText("1")}, {RedText("2")}, or {GreyText("3")}) 
+or "({GreenText("V")}", "{GreenText("O")}", "{GreyText("G")})", respectively.)
+
 - The code will then return the next most suitable word(s).
 Generally, the best first guess is "Slate".\n''')
 while wordfound == False and Guesses < 5:
@@ -141,7 +166,7 @@ while wordfound == False and Guesses < 5:
         wordfound = True
     if len(sortedarray) == 1 or wordfound == True:
         if Guesses != 0:
-            print(f'''Congrats, you found the word, "{sortedarray[0].capitalize()}", in {Guesses + 1} guesses.''')
+            print(f'''Congrats, you found the word, "{GreenText(sortedarray[0].capitalize())}", in {Guesses + 1} guesses.''')
         elif Guesses == 0:
             print(f'''Congrats, you found the word, "Slate", in 1 guess.''')
         time.sleep(10)
@@ -175,7 +200,7 @@ while wordfound == False and Guesses < 5:
     greylist = []
     print(f"\nThere are {len(sortedarray)} possible words remaining.")
     if len(sortedarray) < 2:
-        print(f'''The only possible guess remaining is: "{sortedarray[0]}".''')
+        print(f'''The only possible guess remaining is: "{Pink(sortedarray[0])}".''')
     else:
         print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", and "{sortedarray[1]}".''')
     Guesses += 1
