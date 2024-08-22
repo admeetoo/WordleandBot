@@ -1,0 +1,55 @@
+The letter "e" is repeated 1233 times.
+The letter "a" is repeated 979 times.
+The letter "r" is repeated 899 times.
+The letter "o" is repeated 754 times.
+The letter "t" is repeated 729 times.
+The letter "l" is repeated 719 times.
+The letter "i" is repeated 671 times.
+The letter "s" is repeated 669 times.
+The letter "n" is repeated 575 times.
+The letter "c" is repeated 477 times.
+The letter "u" is repeated 467 times.
+The letter "y" is repeated 425 times.
+The letter "d" is repeated 393 times.
+The letter "h" is repeated 389 times.
+The letter "p" is repeated 367 times.
+The letter "m" is repeated 316 times.
+The letter "g" is repeated 311 times.
+The letter "b" is repeated 281 times.
+The letter "f" is repeated 230 times.
+The letter "k" is repeated 210 times.
+The letter "w" is repeated 195 times.
+The letter "v" is repeated 153 times.
+The letter "z" is repeated 40 times.
+The letter "x" is repeated 37 times.
+The letter "q" is repeated 29 times.
+The letter "j" is repeated 27 times.
+
+
+"e" - 10.65%   4
+"a" - 8.46%   0
+"r" - 7.77%
+"o" - 6.51%
+"t" - 6.3%
+"l" - 6.21%
+"i" - 5.8%
+"s" - 5.78%
+"n" - 4.97%
+"c" - 4.12%   2
+"u" - 4.03%
+"y" - 3.67%
+"d" - 3.4%   3
+"h" - 3.36%
+"p" - 3.17%
+"m" - 2.73%
+"g" - 2.69%   6
+"b" - 2.43%   1
+"f" - 1.99%   5
+"k" - 1.81%
+"w" - 1.68%
+"v" - 1.32%
+"z" - 0.35%
+"x" - 0.32%
+"q" - 0.25%
+"j" - 0.23%
+
