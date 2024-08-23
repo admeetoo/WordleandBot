@@ -43,11 +43,20 @@ arr = []
 percentarray = [8.46, 2.43, 4.12, 3.4, 10.65, 1.99, 2.69, 3.36, 5.8, 0.23, 1.81, 6.21, 2.73, 4.97, 6.51, 3.17, 0.25, 7.77, 5.78, 6.3, 4.03, 1.32, 1.68, 0.32, 3.67, 0.35]
 wordtotal = 0
 word = ""
+word2 = ""
 arrfsorting = [0] * 26
 charg = ""
 power = float(1)
-# Give each word score, and add to 2d array
+arrGuessListSmall = []
 
+# Give each word score, and add to 2d array
+# TOGGLE START
+
+# SmallWordsFile = open("GuessWords.txt", "r")
+# for i in range(2316):
+#     word2 = SmallWordsFile.readline().strip()
+#     arrGuessListSmall.append(word2)
+#
 # GuessWordsFile = open("FillerandGuess.txt", "r")
 # for i in range(12972):
 #     word = GuessWordsFile.readline().strip()
@@ -61,16 +70,26 @@ power = float(1)
 #             power = arrfsorting[chrToNum(mid(word, x, 1))]
 #             # ensure repeated letters are given less score.
 #             wordtotal += (percentarray[chrToNum(mid(word, x, 1))]) * (float(0.35) ** float(power))
+#     for y in range(len(arrGuessListSmall)):
+#         if word == arrGuessListSmall[y]:
+#             # Give larger reward if the word is in the smaller word list, as it is more likely to be the word.
+#             # Toggle this line if you want to turn this functionality off.
+#             wordtotal += 1
 #     power = 1
 #     arrfsorting = [0] * 26
 #     arr.append([word, wordtotal])
 #     wordtotal = 0
 #     word = ""
 
+# TOGGLE END
+
+
 sortedarray = []
 largest = 0
+
 # Sort Entire Array, copy to text file (save processing)
-#
+# TOGGLE START
+
 # for x in range(12972):
 #     for i in range(12972):
 #         if arr[i][1] > largest and arr[i][1] > 0:
@@ -84,6 +103,10 @@ largest = 0
 # sortedfile = open("sortedarray.txt", "w")
 # for i in range(len(sortedarray)):
 #     sortedfile.write(sortedarray[i]+"\n")
+# sortedfile.close()
+
+# TOGGLE END
+
 sortedarrayfillers = []
 sortedfile = open("sortedarray.txt", "r")
 for i in range(12972):
