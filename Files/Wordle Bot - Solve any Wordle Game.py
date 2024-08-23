@@ -84,10 +84,17 @@ largest = 0
 # sortedfile = open("sortedarray.txt", "w")
 # for i in range(len(sortedarray)):
 #     sortedfile.write(sortedarray[i]+"\n")
-
+sortedarrayfillers = []
 sortedfile = open("sortedarray.txt", "r")
 for i in range(12972):
     sortedarray.append(sortedfile.readline().strip())
+sortedfile.close()
+
+sortedfile = open("sortedarray.txt", "r")
+for i in range(12972):
+    sortedarrayfillers.append(sortedfile.readline().strip())
+sortedfile.close()
+
 
 greenlist = []
 def green(char, ix):
@@ -107,6 +114,13 @@ def green(char, ix):
             wordfound = True
     else:
         print("There are no more possible guesses. This either means you have made some incorrect inputs, or the word you are looking for is not in my list.")
+    if len(sortedarrayfillers) != 0:
+        for i in range(len(sortedarrayfillers)-1, -1, -1):
+            for y in range(5):
+                if mid(sortedarrayfillers[i], y, 1) == char and len(sortedarrayfillers) > 0:
+                    sortedarrayfillers.pop(i)
+                    break
+
 
 def orange(char, ix):
     if len(sortedarray) != 0:
@@ -127,7 +141,12 @@ def orange(char, ix):
             wordfound = True
     else:
         print("There are no more possible guesses. This either means you have made some incorrect inputs, or the word you are looking for is not in my list.")
-
+    if len(sortedarrayfillers) != 0:
+        for i in range(len(sortedarrayfillers) - 1, -1, -1):
+            for y in range(5):
+                if mid(sortedarrayfillers[i], y, 1) == char and len(sortedarrayfillers) > 0:
+                    sortedarrayfillers.pop(i)
+                    break
 
 
 def grey(char, ix):
@@ -154,7 +173,16 @@ def grey(char, ix):
             print("small error grey")
     else:
         print("There are no more possible guesses. This either means you have made some incorrect inputs, or the word you are looking for is not in my list.")
+    if len(sortedarrayfillers) != 0:
+        for i in range(len(sortedarrayfillers) - 1, -1, -1):
+            for y in range(5):
+                if mid(sortedarrayfillers[i], y, 1) == char and len(sortedarrayfillers) > 0:
+                    sortedarrayfillers.pop(i)
+                    break
 
+
+greencount = 0
+fillertrials = 0
 greylist = []
 orangelist = []
 color = ""
@@ -220,6 +248,7 @@ while wordfound == False and Guesses < 5:
                 green(mid(yourword, i, 1), i)
                 Ixg = chrToNum(mid(yourword, i, 1))
                 LettersFound[Ixg] = True
+                greencount += 1
             else:
                 print("I am here green")
                 break
@@ -248,11 +277,17 @@ while wordfound == False and Guesses < 5:
     elif len(sortedarray) == 1:
         print(f'''The only possible guess remaining is: "{Pink(sortedarray[0])}".''')
     else:
-        print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", and "{sortedarray[1]}".''')
+        if greencount >2 and fillertrials == 0 and len(sortedarray) > 2 and Guesses < 3:
+            fillertrials += 1
+            print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", and "{sortedarray[1]}".''')
+            print(f'''However, I suggest you use a filler word here to narrow down the possibilities.\nHere is the most suitable filler word: "{sortedarrayfillers[0]}"''')
+        else:
+            print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", and "{sortedarray[1]}".''')
     Guesses += 1
     yourword = ""
     color = ""
     correctword = ""
+    greencount = 0
 
 
 
