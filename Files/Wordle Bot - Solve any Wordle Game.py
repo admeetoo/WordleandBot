@@ -91,68 +91,78 @@ for i in range(12972):
 
 greenlist = []
 def green(char, ix):
-    greenlist.append(ix)
-    popped1 = True
-    while popped1 == True:
-        for i in range(len(sortedarray)):
-            if mid(sortedarray[i], ix, 1) != char and len(sortedarray) > 0:
-                sortedarray.pop(i)
-                popped1 = True
-                break
-            popped1 = False
-    popped1 = False
-    if len(sortedarray) == 1:
-        clicker = True
-        wordfound = True
-def orange(char, ix):
-    for i in range(len(sortedarray)-1, -1, -1):
-        if mid(sortedarray[i], ix, 1) == char and len(sortedarray) > 0:
-            sortedarray.pop(i)
-    for i in range(len(sortedarray)-1, -1, -1):   #remove word if it doesn't contain the letter
-        flagcontains = False
-        for y in range(5):
-            if y not in greenlist:
-                if mid(sortedarray[i], y, 1) == char:
-                    flagcontains = True
+    if len(sortedarray) != 0:
+        greenlist.append(ix)
+        popped1 = True
+        while popped1 == True:
+            for i in range(len(sortedarray)):
+                if mid(sortedarray[i], ix, 1) != char and len(sortedarray) > 0:
+                    sortedarray.pop(i)
+                    popped1 = True
                     break
-        if flagcontains == False and len(sortedarray) > 0:
-            sortedarray.pop(i)
-    if len(sortedarray) == 1:
-        clicker = True
-        wordfound = True
-
-def grey(char, ix):
-    try:
-        if LettersFound[chrToNum(char)] == False:
-            for i in range(len(sortedarray)-1, -1, -1):
-                for y in range(5):
-                    if mid(sortedarray[i], y, 1) == char and len(sortedarray) > 0:
-                        sortedarray.pop(i)
-        elif LettersFound[chrToNum(char)] == True:
-            popped2 = True
-            while popped2 == True:
-                for i in range(len(sortedarray)):  # remove the word if it contains the letter in that spot
-                    if mid(sortedarray[i], ix, 1) == char and len(sortedarray) > 0:
-                        sortedarray.pop(i)
-                        popped2 = True
-                        break
-                    popped2 = False
+                popped1 = False
+        popped1 = False
         if len(sortedarray) == 1:
             clicker = True
             wordfound = True
-    except:
-        print("small error grey")
+    else:
+        print("There are no more possible guesses. This either means you have made some incorrect inputs, or the word you are looking for is not in my list.")
+
+def orange(char, ix):
+    if len(sortedarray) != 0:
+        for i in range(len(sortedarray)-1, -1, -1):
+            if mid(sortedarray[i], ix, 1) == char and len(sortedarray) > 0:
+                sortedarray.pop(i)
+        for i in range(len(sortedarray)-1, -1, -1):   #remove word if it doesn't contain the letter
+            flagcontains = False
+            for y in range(5):
+                if y not in greenlist:
+                    if mid(sortedarray[i], y, 1) == char:
+                        flagcontains = True
+                        break
+            if flagcontains == False and len(sortedarray) > 0:
+                sortedarray.pop(i)
+        if len(sortedarray) == 1:
+            clicker = True
+            wordfound = True
+
+
+def grey(char, ix):
+    if len(sortedarray) != 0:
+        try:
+            if LettersFound[chrToNum(char)] == False:
+                for i in range(len(sortedarray)-1, -1, -1):
+                    for y in range(5):
+                        if mid(sortedarray[i], y, 1) == char and len(sortedarray) > 0:
+                            sortedarray.pop(i)
+            elif LettersFound[chrToNum(char)] == True:
+                popped2 = True
+                while popped2 == True:
+                    for i in range(len(sortedarray)):  # remove the word if it contains the letter in that spot
+                        if mid(sortedarray[i], ix, 1) == char and len(sortedarray) > 0:
+                            sortedarray.pop(i)
+                            popped2 = True
+                            break
+                        popped2 = False
+            if len(sortedarray) == 1:
+                clicker = True
+                wordfound = True
+        except:
+            print("small error grey")
+    else:
+        print("There are no more possible guesses. This either means you have made some incorrect inputs, or the word you are looking for is not in my list.")
 
 greylist = []
 orangelist = []
-
+color = ""
+correctword = ""
 yourword = "slate"
 Ixg = 0
 for h in range(5):
     charg = (mid(yourword, h, 1))
     Ixg = chrToNum(charg)
     LettersFound[Ixg] = True
-
+yourword = ""
 Guesses = 0
 print(f'''
 Welcome to Adam's wordle bot!
@@ -167,50 +177,79 @@ or "({GreenText("V")}", "{GreenText("O")}", "{GreyText("G")})", respectively.)
 Generally, the best first guess is "Slate".\n''')
 while wordfound == False and Guesses < 5:
     time.sleep(1.5)
-    correctword = input("Was the word correct? ").lower()
+    while correctword != "yes" and correctword != "no" and correctword != "y" and correctword != "n":
+        correctword = input("Was the word correct? ").lower().strip()
+        if correctword != "yes" and correctword != "no" and correctword != "y" and correctword != "n":
+            print("Incorrect Input, please give a yes or no answer.")
+        else:
+            break
     if correctword == "yes" or correctword == "y":
         wordfound = True
     if len(sortedarray) == 1 or wordfound == True:
         if Guesses != 0:
             print(f'''Congrats, you found the word, "{GreenText(sortedarray[0].capitalize())}", in {Guesses + 1} guesses.''')
         elif Guesses == 0:
-            print(f'''Congrats, you found the word, "Slate", in 1 guess.''')
+            print(f'''Congrats, you found the word, "{GreenText("Slate")}", in 1 guess.''')
         time.sleep(10)
         wordfound = True
         break
     LettersFound = [False] * 26
-    yourword = input(f'''Input word #{Guesses + 1}: ''')
+    while len(yourword) != 5:
+        yourword = input(f'''Input word #{Guesses + 1}: ''').lower()
+        if len(yourword) != 5:
+            print("Incorrect Input, please make sure to input a 5 letter word.")
+        elif len(yourword) == 5:
+            break
     if yourword == sortedarray[0]:
         sortedarray.pop(0)
     for i in range(5):
         if clicker == True:
             clicker = False
             break
-        color = input(f'''Color #{i+1}: ''')
-        color = color.lower()
+        while color != "green" and color != "v" and color != "1" and color != "orange" and color != "2" and color != "o" and color != "grey" and color != "3" and color != "g":
+            color = input(f'''Color #{i+1}: ''').lower()
+            if color != "green" and color != "v" and color != "1" and color != "orange" and color != "2" and color != "o" and color != "grey" and color != "3" and color != "g":
+                print("Incorrect Input, please input one of the three viable colors, Green, Orange, or Grey (Or their corresponding codes).")
+            else:
+                break
         if color == "green" or color == "1" or color == "v":
-            green(mid(yourword, i, 1), i)
-            Ixg = chrToNum(mid(yourword, i, 1))
-            LettersFound[Ixg] = True
+            if len(sortedarray) != 0:
+                green(mid(yourword, i, 1), i)
+                Ixg = chrToNum(mid(yourword, i, 1))
+                LettersFound[Ixg] = True
+            else:
+                print("I am here green")
+                break
         elif color == "orange" or color == "2" or color == "o":
             orangelist.append(i)
             Ixg = chrToNum(mid(yourword, i, 1))
             LettersFound[Ixg] = True
         elif color == "grey" or color == "3" or color == "g":
             greylist.append(i)
+        color = ""
     for i in range(len(orangelist)):
-        orange(mid(yourword, orangelist[i], 1), orangelist[i])
+        if len(sortedarray) != 0:
+            orange(mid(yourword, orangelist[i], 1), orangelist[i])
     for i in range(len(greylist)):
-        grey(mid(yourword, greylist[i], 1), greylist[i])
+        if len(sortedarray) != 0:
+            grey(mid(yourword, greylist[i], 1), greylist[i])
     orangelist = []
     greenlist = []
     greylist = []
     print(f"\nThere are {len(sortedarray)} possible words remaining.")
-    if len(sortedarray) < 2:
+    if len(sortedarray) == 0:
+        print("There are no more possible guesses. This either means you have made some incorrect inputs, or the word you are looking for is not in my list.")
+        time.sleep(10)
+        wordfound = True
+        break
+    elif len(sortedarray) == 1:
         print(f'''The only possible guess remaining is: "{Pink(sortedarray[0])}".''')
     else:
         print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", and "{sortedarray[1]}".''')
     Guesses += 1
+    yourword = ""
+    color = ""
+    correctword = ""
 
 
 
@@ -220,3 +259,4 @@ Unfortunately, the bot wasn't able to guess the word
 however, we think it was one of the following words: ''')
     for i in range(len(sortedarray)):
         print(sortedarray[i].capitalize())
+
