@@ -115,9 +115,9 @@ def green(char, ix):
     else:
         print("There are no more possible guesses. This either means you have made some incorrect inputs, or the word you are looking for is not in my list.")
     if len(sortedarrayfillers) != 0:
-        for i in range(len(sortedarrayfillers)-1, -1, -1):
+        for i in range(len(sortedarrayfillers) - 1, -1, -1):
             for y in range(5):
-                if mid(sortedarrayfillers[i], y, 1) == char and len(sortedarrayfillers) > 0:
+                if mid(sortedarrayfillers[i], y, 1) == char and len(sortedarrayfillers) > 1:
                     sortedarrayfillers.pop(i)
                     break
 
@@ -144,7 +144,7 @@ def orange(char, ix):
     if len(sortedarrayfillers) != 0:
         for i in range(len(sortedarrayfillers) - 1, -1, -1):
             for y in range(5):
-                if mid(sortedarrayfillers[i], y, 1) == char and len(sortedarrayfillers) > 0:
+                if mid(sortedarrayfillers[i], y, 1) == char and len(sortedarrayfillers) > 1:
                     sortedarrayfillers.pop(i)
                     break
 
@@ -176,7 +176,7 @@ def grey(char, ix):
     if len(sortedarrayfillers) != 0:
         for i in range(len(sortedarrayfillers) - 1, -1, -1):
             for y in range(5):
-                if mid(sortedarrayfillers[i], y, 1) == char and len(sortedarrayfillers) > 0:
+                if mid(sortedarrayfillers[i], y, 1) == char and len(sortedarrayfillers) > 1:
                     sortedarrayfillers.pop(i)
                     break
 
@@ -200,14 +200,19 @@ Welcome to Adam's wordle bot!
 
 Here is a quick rundown:-
 - You will enter your word, and will be prompted to enter the color returned by each letter in the word, in order.
-- You will enter the colors: "{GreenText("Green")}", "{RedText("Orange")}", or "{GreyText("Grey")}". 
-- (You may also use ({GreenText("1")}, {RedText("2")}, or {GreyText("3")}) 
-or "({GreenText("V")}", "{GreenText("O")}", "{GreyText("G")})", respectively.)
+- You will enter the colors: "{GreyText("Grey")}", "{RedText("Orange")}", or "{GreenText("Green")}". 
+- (You may also use ({GreyText("1")}, {RedText("2")}, or {GreenText("3")}) or ("{GreyText("G")}", "{RedText("O")}", "{GreenText("V")}"), respectively.)
 
 - The code will then return the next most suitable word(s).
 Generally, the best first guess is "Slate".\n''')
-while wordfound == False and Guesses < 5:
+while wordfound == False and Guesses < 6:
     time.sleep(1.5)
+    while len(yourword) != 5:
+        yourword = input(f'''Input word #{Guesses + 1}: ''').lower()
+        if len(yourword) != 5:
+            print("Incorrect Input, please make sure to input a 5 letter word.")
+        elif len(yourword) == 5:
+            break
     while correctword != "yes" and correctword != "no" and correctword != "y" and correctword != "n":
         correctword = input("Was the word correct? ").lower().strip()
         if correctword != "yes" and correctword != "no" and correctword != "y" and correctword != "n":
@@ -217,22 +222,15 @@ while wordfound == False and Guesses < 5:
     if correctword == "yes" or correctword == "y":
         wordfound = True
     if len(sortedarray) == 1 or wordfound == True:
-        if Guesses != 0:
-            print(f'''Congrats, you found the word, "{GreenText(sortedarray[0].capitalize())}", in {Guesses + 1} guesses.''')
-        elif Guesses == 0:
-            print(f'''Congrats, you found the word, "{GreenText("Slate")}", in 1 guess.''')
+        print(f'''Congrats, you found the word, "{GreenText(yourword.capitalize())}", in {Guesses + 1} guesses.''')
         time.sleep(10)
         wordfound = True
         break
     LettersFound = [False] * 26
-    while len(yourword) != 5:
-        yourword = input(f'''Input word #{Guesses + 1}: ''').lower()
-        if len(yourword) != 5:
-            print("Incorrect Input, please make sure to input a 5 letter word.")
-        elif len(yourword) == 5:
+    for i in range(len(sortedarray)):
+        if yourword == sortedarray[i]:
+            sortedarray.pop(i)
             break
-    if yourword == sortedarray[0]:
-        sortedarray.pop(0)
     for i in range(5):
         if clicker == True:
             clicker = False
@@ -243,7 +241,7 @@ while wordfound == False and Guesses < 5:
                 print("Incorrect Input, please input one of the three viable colors, Green, Orange, or Grey (Or their corresponding codes).")
             else:
                 break
-        if color == "green" or color == "1" or color == "v":
+        if color == "green" or color == "3" or color == "v":
             if len(sortedarray) != 0:
                 green(mid(yourword, i, 1), i)
                 Ixg = chrToNum(mid(yourword, i, 1))
@@ -256,7 +254,7 @@ while wordfound == False and Guesses < 5:
             orangelist.append(i)
             Ixg = chrToNum(mid(yourword, i, 1))
             LettersFound[Ixg] = True
-        elif color == "grey" or color == "3" or color == "g":
+        elif color == "grey" or color == "1" or color == "g":
             greylist.append(i)
         color = ""
     for i in range(len(orangelist)):
@@ -277,12 +275,18 @@ while wordfound == False and Guesses < 5:
     elif len(sortedarray) == 1:
         print(f'''The only possible guess remaining is: "{Pink(sortedarray[0])}".''')
     else:
-        if greencount >2 and fillertrials == 0 and len(sortedarray) > 2 and Guesses < 3:
+        if greencount > 2 and fillertrials < 2 and len(sortedarray) > 2 and Guesses < 4:
             fillertrials += 1
             print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", and "{sortedarray[1]}".''')
             print(f'''However, I suggest you use a filler word here to narrow down the possibilities.\nHere is the most suitable filler word: "{sortedarrayfillers[0]}"''')
         else:
-            print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", and "{sortedarray[1]}".''')
+            if len(sortedarray) == 2:
+                print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", and "{sortedarray[1]}".''')
+            elif len(sortedarray) == 3:
+                print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", "{sortedarray[1]}", and "{sortedarray[2]}".''')
+            elif len(sortedarray) >= 4:
+                print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", "{sortedarray[1]}", "{sortedarray[2]}", and "{sortedarray[3]}".''')
+
     Guesses += 1
     yourword = ""
     color = ""

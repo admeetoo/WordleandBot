@@ -54,7 +54,7 @@ print(f'''
 Welcome to Adam's {Green("W")}{NoColor(" ")}{Green("O")}{NoColor(" ")}{Green("R")}{NoColor(" ")}{Green("D")}{NoColor(" ")}{Green("L")}{NoColor(" ")}{Green("E")}!
 Here are the rules:
 - A random 5-letter word will be generated.
-- You get 5 chances to get this word.
+- You get 6 chances to get this word.
 For each guess, a correctly guessed letter will:
 - Turn {Green("Green")} if it is part of the word & in the correct position.
 - Turn {Red("Orange")} if it is part of the word, but in the incorrect position.
@@ -122,7 +122,7 @@ def Wordle(GuessWord, guess):
 
 
 
-Guesses = 5
+Guesses = 6
 GuessesTaken = 0
 errorprompt = f"Invalid word entered. Please try again: "
 
