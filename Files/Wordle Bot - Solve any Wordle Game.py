@@ -125,6 +125,9 @@ def orange(char, ix):
         if len(sortedarray) == 1:
             clicker = True
             wordfound = True
+    else:
+        print("There are no more possible guesses. This either means you have made some incorrect inputs, or the word you are looking for is not in my list.")
+
 
 
 def grey(char, ix):
