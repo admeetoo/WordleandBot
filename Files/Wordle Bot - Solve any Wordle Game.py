@@ -218,6 +218,9 @@ for h in range(5):
     LettersFound[Ixg] = True
 yourword = ""
 Guesses = 0
+wordsbefore = 0
+wordsafter = 0
+percentremoved = 0.0
 print(f'''
 Welcome to Adam's wordle bot!
 
@@ -254,6 +257,7 @@ while wordfound == False and Guesses < 6:
         if yourword == sortedarray[i]:
             sortedarray.pop(i)
             break
+    wordsbefore = len(sortedarray)
     for i in range(5):
         if clicker == True:
             clicker = False
@@ -286,6 +290,8 @@ while wordfound == False and Guesses < 6:
     for i in range(len(greylist)):
         if len(sortedarray) != 0:
             grey(mid(yourword, greylist[i], 1), greylist[i])
+    wordsafter = len(sortedarray)
+    percentremoved = ((wordsbefore - wordsafter) / wordsbefore)
     orangelist = []
     greenlist = []
     greylist = []
@@ -298,9 +304,14 @@ while wordfound == False and Guesses < 6:
     elif len(sortedarray) == 1:
         print(f'''The only possible guess remaining is: "{Pink(sortedarray[0])}".''')
     else:
-        if greencount > 2 and fillertrials < 2 and len(sortedarray) > 2 and Guesses < 4:
+        if (greencount > 2 or (float(percentremoved) < 0.42 and len(sortedarray) > 5)) and fillertrials < 2 and len(sortedarray) > 2 and Guesses < 4 and Guesses > 0:
             fillertrials += 1
-            print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", and "{sortedarray[1]}".''')
+            if len(sortedarray) == 2:
+                print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", and "{sortedarray[1]}".''')
+            elif len(sortedarray) == 3:
+                print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", "{sortedarray[1]}", and "{sortedarray[2]}".''')
+            elif len(sortedarray) >= 4:
+                print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", "{sortedarray[1]}", "{sortedarray[2]}", and "{sortedarray[3]}".''')
             print(f'''However, I suggest you use a filler word here to narrow down the possibilities.\nHere is the most suitable filler word: "{sortedarrayfillers[0]}"''')
         else:
             if len(sortedarray) == 2:
@@ -324,4 +335,5 @@ Unfortunately, the bot wasn't able to guess the word
 however, we think it was one of the following words: ''')
     for i in range(len(sortedarray)):
         print(sortedarray[i].capitalize())
+    time.sleep(10)
 
