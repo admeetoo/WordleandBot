@@ -118,6 +118,13 @@ for i in range(12972):
     sortedarrayfillers.append(sortedfile.readline().strip())
 sortedfile.close()
 
+guesswordslist = []
+
+guesswords = open("GuessWords.txt", "r")
+for i in range(2316):
+    guesswordslist.append(guesswords.readline().strip())
+guesswords.close()
+
 
 greenlist = []
 def green(char, ix):
@@ -204,6 +211,7 @@ def grey(char, ix):
                     break
 
 
+templist = [""] * 4
 greencount = 0
 fillertrials = 0
 greylist = []
@@ -230,6 +238,8 @@ Here is a quick rundown:-
 - (You may also use ({GreyText("1")}, {RedText("2")}, or {GreenText("3")}) or ("{GreyText("G")}", "{RedText("O")}", "{GreenText("V")}"), respectively.)
 
 - The code will then return the next most suitable word(s).
+- Words highlighted in {Yellow("yellow")} are common words.
+
 Generally, the best first guess is "Slate".\n''')
 while wordfound == False and Guesses < 6:
     time.sleep(1.5)
@@ -304,22 +314,44 @@ while wordfound == False and Guesses < 6:
     elif len(sortedarray) == 1:
         print(f'''The only possible guess remaining is: "{Pink(sortedarray[0])}".''')
     else:
+        if len(sortedarray) == 2:
+            for i in range(2):
+                for y in range(len(guesswordslist)):
+                    if sortedarray[i] == guesswordslist[y]:
+                        templist[i] = Yellow(sortedarray[i])
+                        break
+                    templist[i] = sortedarray[i]
+        elif len(sortedarray) == 3:
+            for i in range(3):
+                for y in range(len(guesswordslist)):
+                    if sortedarray[i] == guesswordslist[y]:
+                        templist[i] = Yellow(sortedarray[i])
+                        break
+                    templist[i] = sortedarray[i]
+        elif len(sortedarray) >= 4:
+            for i in range(4):
+                for y in range(len(guesswordslist)):
+                    if sortedarray[i] == guesswordslist[y]:
+                        templist[i] = Yellow(sortedarray[i])
+                        break
+                    templist[i] = sortedarray[i]
         if (greencount > 2 or (float(percentremoved) < 0.42 and len(sortedarray) > 5)) and fillertrials < 2 and len(sortedarray) > 2 and Guesses < 4 and Guesses > 0:
             fillertrials += 1
             if len(sortedarray) == 2:
-                print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", and "{sortedarray[1]}".''')
+                print(f'''In order, the most suitable guesses are: "{templist[0]}", and "{templist[1]}".''')
             elif len(sortedarray) == 3:
-                print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", "{sortedarray[1]}", and "{sortedarray[2]}".''')
+                print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", and "{templist[2]}".''')
             elif len(sortedarray) >= 4:
-                print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", "{sortedarray[1]}", "{sortedarray[2]}", and "{sortedarray[3]}".''')
+                print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", "{templist[2]}", and "{templist[3]}".''')
             print(f'''However, I suggest you use a filler word here to narrow down the possibilities.\nHere is the most suitable filler word: "{sortedarrayfillers[0]}"''')
         else:
             if len(sortedarray) == 2:
-                print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", and "{sortedarray[1]}".''')
+                print(f'''In order, the most suitable guesses are: "{templist[0]}", and "{templist[1]}".''')
             elif len(sortedarray) == 3:
-                print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", "{sortedarray[1]}", and "{sortedarray[2]}".''')
+                print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", and "{templist[2]}".''')
             elif len(sortedarray) >= 4:
-                print(f'''In order, the most suitable guesses are: "{sortedarray[0]}", "{sortedarray[1]}", "{sortedarray[2]}", and "{sortedarray[3]}".''')
+                print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", "{templist[2]}", and "{templist[3]}".''')
+        templist = [""] * 4
 
     Guesses += 1
     yourword = ""
