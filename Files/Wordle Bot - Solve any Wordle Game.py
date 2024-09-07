@@ -239,133 +239,188 @@ Here is a quick rundown:-
 
 - The code will then return the next most suitable word(s).
 - Words highlighted in {Yellow("yellow")} are common words.
+''')
 
-Generally, the best first guess is "Slate".\n''')
-while wordfound == False and Guesses < 6:
-    time.sleep(1.5)
-    while len(yourword) != 5:
-        yourword = input(f'''Input word #{Guesses + 1}: ''').lower()
-        if len(yourword) != 5:
-            print("Incorrect Input, please make sure to input a 5 letter word.")
-        elif len(yourword) == 5:
-            break
-    while correctword != "yes" and correctword != "no" and correctword != "y" and correctword != "n":
-        correctword = input("Was the word correct? ").lower().strip()
-        if correctword != "yes" and correctword != "no" and correctword != "y" and correctword != "n":
-            print("Incorrect Input, please give a yes or no answer.")
-        else:
-            break
-    if correctword == "yes" or correctword == "y":
-        wordfound = True
-    if len(sortedarray) == 1 or wordfound == True:
-        print(f'''Congrats, you found the word, "{GreenText(yourword.capitalize())}", in {Guesses + 1} guesses.''')
-        time.sleep(10)
-        wordfound = True
-        break
-    LettersFound = [False] * 26
-    for i in range(len(sortedarray)):
-        if yourword == sortedarray[i]:
-            sortedarray.pop(i)
-            break
-    wordsbefore = len(sortedarray)
-    for i in range(5):
-        if clicker == True:
-            clicker = False
-            break
-        while color != "green" and color != "v" and color != "1" and color != "orange" and color != "2" and color != "o" and color != "grey" and color != "3" and color != "g":
-            color = input(f'''Color #{i+1}: ''').lower()
-            if color != "green" and color != "v" and color != "1" and color != "orange" and color != "2" and color != "o" and color != "grey" and color != "3" and color != "g":
-                print("Incorrect Input, please input one of the three viable colors, Green, Orange, or Grey (Or their corresponding codes).")
+playagain = ""
+playagain2 = True
+toggle = False
+endgame = False
+
+while endgame == False:
+    print('''Generally, the best first guess is "Slate".\n''')
+
+    while wordfound == False and Guesses < 6:
+        time.sleep(1)
+        while len(yourword) != 5:
+            yourword = input(f'''Input word #{Guesses + 1}: ''').lower()
+            if len(yourword) != 5:
+                print("Incorrect Input, please make sure to input a 5 letter word.")
+            elif len(yourword) == 5:
+                break
+        while correctword != "yes" and correctword != "no" and correctword != "y" and correctword != "n":
+            correctword = input("Was the word correct? ").lower().strip()
+            if correctword != "yes" and correctword != "no" and correctword != "y" and correctword != "n":
+                print("Incorrect Input, please give a yes or no answer.")
             else:
                 break
-        if color == "green" or color == "3" or color == "v":
-            if len(sortedarray) != 0:
-                green(mid(yourword, i, 1), i)
+        if correctword == "yes" or correctword == "y":
+            wordfound = True
+        if len(sortedarray) == 1 or wordfound == True:
+            print(f'''Congrats, you found the word, "{GreenText(yourword.capitalize())}", in {Guesses + 1} guesses.''')
+            wordfound = True
+            break
+        LettersFound = [False] * 26
+        for i in range(len(sortedarray)):
+            if yourword == sortedarray[i]:
+                sortedarray.pop(i)
+                break
+        wordsbefore = len(sortedarray)
+        for i in range(5):
+            if clicker == True:
+                clicker = False
+                break
+            while color != "green" and color != "v" and color != "1" and color != "orange" and color != "2" and color != "o" and color != "grey" and color != "3" and color != "g":
+                color = input(f'''Color #{i+1}: ''').lower()
+                if color != "green" and color != "v" and color != "1" and color != "orange" and color != "2" and color != "o" and color != "grey" and color != "3" and color != "g":
+                    print("Incorrect Input, please input one of the three viable colors, Green, Orange, or Grey (Or their corresponding codes).")
+                else:
+                    break
+            if color == "green" or color == "3" or color == "v":
+                if len(sortedarray) != 0:
+                    green(mid(yourword, i, 1), i)
+                    Ixg = chrToNum(mid(yourword, i, 1))
+                    LettersFound[Ixg] = True
+                    greencount += 1
+                else:
+                    print("I am here green")
+                    break
+            elif color == "orange" or color == "2" or color == "o":
+                orangelist.append(i)
                 Ixg = chrToNum(mid(yourword, i, 1))
                 LettersFound[Ixg] = True
-                greencount += 1
-            else:
-                print("I am here green")
-                break
-        elif color == "orange" or color == "2" or color == "o":
-            orangelist.append(i)
-            Ixg = chrToNum(mid(yourword, i, 1))
-            LettersFound[Ixg] = True
-        elif color == "grey" or color == "1" or color == "g":
-            greylist.append(i)
-        color = ""
-    for i in range(len(orangelist)):
-        if len(sortedarray) != 0:
-            orange(mid(yourword, orangelist[i], 1), orangelist[i])
-    for i in range(len(greylist)):
-        if len(sortedarray) != 0:
-            grey(mid(yourword, greylist[i], 1), greylist[i])
-    wordsafter = len(sortedarray)
-    percentremoved = ((wordsbefore - wordsafter) / wordsbefore)
-    orangelist = []
-    greenlist = []
-    greylist = []
-    print(f"\nThere are {len(sortedarray)} possible words remaining.")
-    if len(sortedarray) == 0:
-        print("There are no more possible guesses. This either means you have made some incorrect inputs, or the word you are looking for is not in my list.")
-        time.sleep(10)
-        wordfound = True
-        break
-    elif len(sortedarray) == 1:
-        print(f'''The only possible guess remaining is: "{Pink(sortedarray[0])}".''')
-    else:
-        if len(sortedarray) == 2:
-            for i in range(2):
-                for y in range(len(guesswordslist)):
-                    if sortedarray[i] == guesswordslist[y]:
-                        templist[i] = Yellow(sortedarray[i])
-                        break
-                    templist[i] = sortedarray[i]
-        elif len(sortedarray) == 3:
-            for i in range(3):
-                for y in range(len(guesswordslist)):
-                    if sortedarray[i] == guesswordslist[y]:
-                        templist[i] = Yellow(sortedarray[i])
-                        break
-                    templist[i] = sortedarray[i]
-        elif len(sortedarray) >= 4:
-            for i in range(4):
-                for y in range(len(guesswordslist)):
-                    if sortedarray[i] == guesswordslist[y]:
-                        templist[i] = Yellow(sortedarray[i])
-                        break
-                    templist[i] = sortedarray[i]
-        if (greencount > 2 or (float(percentremoved) < 0.42 and len(sortedarray) > 5)) and fillertrials < 2 and len(sortedarray) > 2 and Guesses < 4 and Guesses > 0:
-            fillertrials += 1
-            if len(sortedarray) == 2:
-                print(f'''In order, the most suitable guesses are: "{templist[0]}", and "{templist[1]}".''')
-            elif len(sortedarray) == 3:
-                print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", and "{templist[2]}".''')
-            elif len(sortedarray) >= 4:
-                print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", "{templist[2]}", and "{templist[3]}".''')
-            print(f'''However, I suggest you use a filler word here to narrow down the possibilities.\nHere is the most suitable filler word: "{sortedarrayfillers[0]}"''')
+            elif color == "grey" or color == "1" or color == "g":
+                greylist.append(i)
+            color = ""
+        for i in range(len(orangelist)):
+            if len(sortedarray) != 0:
+                orange(mid(yourword, orangelist[i], 1), orangelist[i])
+        for i in range(len(greylist)):
+            if len(sortedarray) != 0:
+                grey(mid(yourword, greylist[i], 1), greylist[i])
+        wordsafter = len(sortedarray)
+        percentremoved = ((wordsbefore - wordsafter) / wordsbefore)
+        orangelist = []
+        greenlist = []
+        greylist = []
+        print(f"\nThere are {len(sortedarray)} possible words remaining.")
+        if len(sortedarray) == 0:
+            print("There are no more possible guesses. This either means you have made some incorrect inputs, or the word you are looking for is not in my list.")
+            wordfound = True
+            break
+        elif len(sortedarray) == 1:
+            print(f'''The only possible guess remaining is: "{Pink(sortedarray[0])}".''')
         else:
             if len(sortedarray) == 2:
-                print(f'''In order, the most suitable guesses are: "{templist[0]}", and "{templist[1]}".''')
+                for i in range(2):
+                    for y in range(len(guesswordslist)):
+                        if sortedarray[i] == guesswordslist[y]:
+                            templist[i] = Yellow(sortedarray[i])
+                            break
+                        templist[i] = sortedarray[i]
             elif len(sortedarray) == 3:
-                print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", and "{templist[2]}".''')
+                for i in range(3):
+                    for y in range(len(guesswordslist)):
+                        if sortedarray[i] == guesswordslist[y]:
+                            templist[i] = Yellow(sortedarray[i])
+                            break
+                        templist[i] = sortedarray[i]
             elif len(sortedarray) >= 4:
-                print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", "{templist[2]}", and "{templist[3]}".''')
-        templist = [""] * 4
+                for i in range(4):
+                    for y in range(len(guesswordslist)):
+                        if sortedarray[i] == guesswordslist[y]:
+                            templist[i] = Yellow(sortedarray[i])
+                            break
+                        templist[i] = sortedarray[i]
+            if (greencount > 2 or (float(percentremoved) < 0.42 and len(sortedarray) > 5)) and fillertrials < 2 and len(sortedarray) > 2 and Guesses < 4 and Guesses > 0:
+                fillertrials += 1
+                if len(sortedarray) == 2:
+                    print(f'''In order, the most suitable guesses are: "{templist[0]}", and "{templist[1]}".''')
+                elif len(sortedarray) == 3:
+                    print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", and "{templist[2]}".''')
+                elif len(sortedarray) >= 4:
+                    print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", "{templist[2]}", and "{templist[3]}".''')
+                print(f'''However, I suggest you use a filler word here to narrow down the possibilities.\nHere is the most suitable filler word: "{sortedarrayfillers[0]}"''')
+            else:
+                if len(sortedarray) == 2:
+                    print(f'''In order, the most suitable guesses are: "{templist[0]}", and "{templist[1]}".''')
+                elif len(sortedarray) == 3:
+                    print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", and "{templist[2]}".''')
+                elif len(sortedarray) >= 4:
+                    print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", "{templist[2]}", and "{templist[3]}".''')
+            templist = [""] * 4
 
-    Guesses += 1
-    yourword = ""
-    color = ""
-    correctword = ""
-    greencount = 0
+        Guesses += 1
+        yourword = ""
+        color = ""
+        correctword = ""
+        greencount = 0
 
 
 
-if wordfound == False:
-    print(f'''
-Unfortunately, the bot wasn't able to guess the word
-however, we think it was one of the following words: ''')
-    for i in range(len(sortedarray)):
-        print(sortedarray[i].capitalize())
-    time.sleep(10)
+    if wordfound == False:
+        print(f'''
+    Unfortunately, the bot wasn't able to guess the word
+    however, we think it was one of the following words: ''')
+        for i in range(len(sortedarray)):
+            print(sortedarray[i].capitalize())
 
+    while playagain != "yes" and playagain != "no" and playagain != "n" and playagain != "y":
+        if toggle == True:
+            print("Incorrect input, please enter yes or no.")
+        playagain = input("\nDo you want to figure out another word?\n").lower()
+        if playagain == "yes" or playagain == "y":
+            playagain2 = True
+            print("\nAlright,")
+            toggle = False
+            Guesses = 0
+            sortedarrayfillers = []
+            sortedfile = open("sortedarray.txt", "r")
+            for i in range(12972):
+                sortedarray.append(sortedfile.readline().strip())
+            sortedfile.close()
+
+            sortedfile = open("sortedarray.txt", "r")
+            for i in range(12972):
+                sortedarrayfillers.append(sortedfile.readline().strip())
+            sortedfile.close()
+
+            guesswordslist = []
+
+            guesswords = open("GuessWords.txt", "r")
+            for i in range(2316):
+                guesswordslist.append(guesswords.readline().strip())
+            guesswords.close()
+            greenlist = []
+            templist = [""] * 4
+            greencount = 0
+            fillertrials = 0
+            greylist = []
+            orangelist = []
+            color = ""
+            correctword = ""
+            wordfound = False
+            yourword = ""
+            playagain = ""
+            break
+        elif playagain == "no" or playagain == "n":
+            playagain2 = False
+            toggle = False
+            break
+        else:
+            toggle = True
+
+    if playagain2 == False:
+        break
+
+print("\nOkay,\nThanks for using Adam's Wordle Bot!")
+time.sleep(10)
