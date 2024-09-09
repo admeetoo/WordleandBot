@@ -275,12 +275,7 @@ greylist = []
 orangelist = []
 color = ""
 correctword = ""
-yourword = "slate"
 Ixg = 0
-for h in range(5):
-    charg = (mid(yourword, h, 1))
-    Ixg = chrToNum(charg)
-    LettersFound[Ixg] = True
 yourword = ""
 Guesses = 0
 wordsbefore = 0
@@ -304,18 +299,28 @@ playagain2 = True
 toggle = False
 endgame = False
 flagfiller = False
+intentional = ""
+flag5 = False
 # START OF MAIN CODE
 
 while endgame == False:
     print('''Generally, the best first guess is "Slate".''')
 
     while wordfound == False and Guesses < 6:
-        while len(yourword) != 5:
+        while len(yourword) != 5 or (yourword != temporary1 and yourword != temporary2 and yourword != temporary3 and yourword != sortedarray[0] and yourword != sortedarray[1] and yourword != sortedarray[2] and yourword != sortedarray[3] and yourword != "slate"):
+            intentional = ""
             yourword = input(f'''\nInput word #{Guesses + 1}: ''').lower().strip()
             if len(yourword) != 5:
                 print("Incorrect Input, please make sure to input a 5 letter word.")
-            elif len(yourword) == 5:
-                break
+            elif yourword != temporary1 and yourword != temporary2 and yourword != temporary3 and yourword != sortedarray[0] and yourword != sortedarray[1] and yourword != sortedarray[2] and yourword != sortedarray[3] and yourword != "slate":
+                while intentional != "yes" and intentional != "y" and intentional != "no" and intentional != "n":
+                    intentional = input("You entered a word outside of the given prompts, are you sure you want to proceed with it? ").lower().strip()
+                    if intentional != "yes" and intentional != "y" and intentional != "no" and intentional != "n":
+                        print("Incorrect Input, please give a yes or no response. ")
+                if intentional == "yes" or intentional == "y":
+                    break
+                elif intentional == "no" or intentional == "n":
+                    continue
         while correctword != "yes" and correctword != "no" and correctword != "y" and correctword != "n":
             if (yourword == temporary1 or yourword == temporary2 or yourword == temporary3) and flagfiller == True:
                 print(f'''You've used the filler word "{yourword.title()}", please enter the colors that were returned:''')
@@ -437,6 +442,8 @@ while endgame == False:
         correctword = ""
         greencount = 0
         lilflag = False
+        flag5 = False
+        intentional = ""
 
 
 
