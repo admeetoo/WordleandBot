@@ -48,6 +48,13 @@ arrfsorting = [0] * 26
 charg = ""
 power = float(1)
 arrGuessListSmall = []
+arr2 = []  #2d array holding all scores for filler words.
+arrayfillerrewards = [0.0] * 26
+arrayfillerlettercounts = [0] * 26
+letterinword = [False] * 26
+
+
+
 
 # Give each word score, and add to 2d array
 # TOGGLE START
@@ -86,6 +93,8 @@ arrGuessListSmall = []
 
 sortedarray = []
 largest = 0
+outputfiller2 = ""
+
 
 # Sort Entire Array, copy to text file (save processing)
 # TOGGLE START
@@ -117,8 +126,52 @@ sortedfile = open("sortedarray.txt", "r")
 for i in range(12972):
     sortedarrayfillers.append(sortedfile.readline().strip())
 sortedfile.close()
+temporary1 = ""
+temporary2 = ""
+temporary3 = ""
+
 
 guesswordslist = []
+countersetletters = 0 #Amount of letters found in every one of the remaining words.
+def dynamic_percent_array():
+    global sortedarrayfillers, letterinword, sortedarray, arrayfillerrewards, arrayfillerlettercounts, countersetletters, outputfiller2, temporary1, temporary2, temporary3
+    countersetletters = 0
+    wordtotalin = 0
+    arraysortedfillersresetable = []
+    arrayfillerrewards = [0.0] * 26
+    arrayofsorting = [0] * 26
+    arrayfillerlettercounts = [0] * 26
+    for i in range(len(sortedarray)):
+        letterinword = [False] * 26
+        for x in range(5):
+            if letterinword[chrToNum(mid(sortedarray[i], x, 1))] == False:
+                letterinword[chrToNum(mid(sortedarray[i], x, 1))] = True
+                arrayfillerlettercounts[chrToNum(mid(sortedarray[i], x, 1))] += 1
+    for i in range(26):
+        arrayfillerrewards[i] = arrayfillerlettercounts[i]/len(sortedarray)
+        if arrayfillerrewards[i] == 1.0:
+            countersetletters += 1
+        if arrayfillerrewards[i] == 0.0:
+            arrayfillerrewards[i] = 1.5
+    for i in range(len(sortedarrayfillers)):
+        arrayofsorting = [0] * 26
+        wordtotalin = 0
+        for x in range(5):
+            if arrayofsorting[chrToNum(mid(sortedarrayfillers[i], x, 1))] == 0:
+                wordtotalin += arrayfillerrewards[chrToNum(mid(sortedarrayfillers[i], x, 1))]
+            else:
+                wordtotalin += 30
+            arrayofsorting[chrToNum(mid(sortedarrayfillers[i], x, 1))] += 1
+        arraysortedfillersresetable.append([wordtotalin, sortedarrayfillers[i]])
+    arraysortedfillersresetable.sort()
+    temporary1 = arraysortedfillersresetable[0][1]
+    temporary2 = arraysortedfillersresetable[1][1]
+    temporary3 = arraysortedfillersresetable[2][1]
+
+
+
+
+
 
 guesswords = open("GuessWords.txt", "r")
 for i in range(2316):
@@ -144,12 +197,7 @@ def green(char, ix):
             wordfound = True
     else:
         print("There are no more possible guesses. This either means you have made some incorrect inputs, or the word you are looking for is not in my list.")
-    if len(sortedarrayfillers) != 0:
-        for i in range(len(sortedarrayfillers) - 1, -1, -1):
-            for y in range(5):
-                if mid(sortedarrayfillers[i], y, 1) == char and len(sortedarrayfillers) > 1:
-                    sortedarrayfillers.pop(i)
-                    break
+
 
 
 def orange(char, ix):
@@ -171,12 +219,7 @@ def orange(char, ix):
             wordfound = True
     else:
         print("There are no more possible guesses. This either means you have made some incorrect inputs, or the word you are looking for is not in my list.")
-    if len(sortedarrayfillers) != 0:
-        for i in range(len(sortedarrayfillers) - 1, -1, -1):
-            for y in range(5):
-                if mid(sortedarrayfillers[i], y, 1) == char and len(sortedarrayfillers) > 1:
-                    sortedarrayfillers.pop(i)
-                    break
+
 
 
 def grey(char, ix):
@@ -203,14 +246,9 @@ def grey(char, ix):
             print("small error grey")
     else:
         print("There are no more possible guesses. This either means you have made some incorrect inputs, or the word you are looking for is not in my list.")
-    if len(sortedarrayfillers) != 0:
-        for i in range(len(sortedarrayfillers) - 1, -1, -1):
-            for y in range(5):
-                if mid(sortedarrayfillers[i], y, 1) == char and len(sortedarrayfillers) > 1:
-                    sortedarrayfillers.pop(i)
-                    break
 
 
+lilflag = False
 templist = [""] * 4
 greencount = 0
 fillertrials = 0
@@ -237,6 +275,7 @@ Here is a quick rundown:-
 - You will enter the colors: "{GreyText("Grey")}", "{RedText("Orange")}", or "{GreenText("Green")}". 
 - (You may also use ({GreyText("1")}, {RedText("2")}, or {GreenText("3")}) or ("{GreyText("G")}", "{RedText("O")}", "{GreenText("V")}"), respectively.)
 
+- There are {len(sortedarray)} possible words to be found.
 - The code will then return the next most suitable word(s).
 - Words highlighted in {Yellow("yellow")} are common words.
 ''')
@@ -246,19 +285,23 @@ playagain2 = True
 toggle = False
 endgame = False
 
+# START OF MAIN CODE
+
 while endgame == False:
-    print('''Generally, the best first guess is "Slate".\n''')
+    print('''Generally, the best first guess is "Slate".''')
 
     while wordfound == False and Guesses < 6:
-        time.sleep(1)
         while len(yourword) != 5:
-            yourword = input(f'''Input word #{Guesses + 1}: ''').lower()
+            yourword = input(f'''\nInput word #{Guesses + 1}: ''').lower().strip()
             if len(yourword) != 5:
                 print("Incorrect Input, please make sure to input a 5 letter word.")
             elif len(yourword) == 5:
                 break
         while correctword != "yes" and correctword != "no" and correctword != "y" and correctword != "n":
-            correctword = input("Was the word correct? ").lower().strip()
+            if yourword == temporary1 or yourword == temporary2 or yourword == temporary3:
+                print(f'''You've used the filler word "{yourword.title()}", please enter the colors that were returned:''')
+                break
+            correctword = input(f'''Was the word "{yourword}" correct? ''').lower().strip()
             if correctword != "yes" and correctword != "no" and correctword != "y" and correctword != "n":
                 print("Incorrect Input, please give a yes or no answer.")
             else:
@@ -280,6 +323,12 @@ while endgame == False:
                 clicker = False
                 break
             while color != "green" and color != "v" and color != "1" and color != "orange" and color != "2" and color != "o" and color != "grey" and color != "3" and color != "g":
+                if Guesses == 5:
+                    print("Unfortunately, the bot wasn't able to guess your word, however, you can still input the colors returned one last time so we can narrow down the final remaining posibilities.")
+                else:
+                    if i == 0 and lilflag == False and (yourword != temporary1 and yourword != temporary2 and yourword != temporary3):
+                        print("Please input the colors returned:")
+                        lilflag = True
                 color = input(f'''Color #{i+1}: ''').lower()
                 if color != "green" and color != "v" and color != "1" and color != "orange" and color != "2" and color != "o" and color != "grey" and color != "3" and color != "g":
                     print("Incorrect Input, please input one of the three viable colors, Green, Orange, or Grey (Or their corresponding codes).")
@@ -341,7 +390,8 @@ while endgame == False:
                             templist[i] = Yellow(sortedarray[i])
                             break
                         templist[i] = sortedarray[i]
-            if (greencount > 2 or (float(percentremoved) < 0.42 and len(sortedarray) > 5)) and fillertrials < 2 and len(sortedarray) > 2 and Guesses < 4 and Guesses > 0:
+            dynamic_percent_array()
+            if (countersetletters > 2 and len(sortedarray) > 2) or (greencount > 2 or (float(percentremoved) < 0.50 and len(sortedarray) > 5)) and fillertrials < 2 and len(sortedarray) > 2 and Guesses < 4 and Guesses > 0:
                 fillertrials += 1
                 if len(sortedarray) == 2:
                     print(f'''In order, the most suitable guesses are: "{templist[0]}", and "{templist[1]}".''')
@@ -349,7 +399,7 @@ while endgame == False:
                     print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", and "{templist[2]}".''')
                 elif len(sortedarray) >= 4:
                     print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", "{templist[2]}", and "{templist[3]}".''')
-                print(f'''However, I suggest you use a filler word here to narrow down the possibilities.\nHere is the most suitable filler word: "{sortedarrayfillers[0]}"''')
+                print(f'''However, I suggest you use a filler word here to narrow down the possibilities.\nHere are the 3 most suitable filler words: "{temporary1.title()}", "{temporary2.title()}", & "{temporary3.title()}".''')
             else:
                 if len(sortedarray) == 2:
                     print(f'''In order, the most suitable guesses are: "{templist[0]}", and "{templist[1]}".''')
@@ -364,13 +414,14 @@ while endgame == False:
         color = ""
         correctword = ""
         greencount = 0
+        lilflag = False
 
 
 
     if wordfound == False:
         print(f'''
-    Unfortunately, the bot wasn't able to guess the word
-    however, we think it was one of the following words: ''')
+Unfortunately, the bot wasn't able to guess the word
+however, we think it was one of the following words: ''')
         for i in range(len(sortedarray)):
             print(sortedarray[i].capitalize())
 
@@ -383,6 +434,7 @@ while endgame == False:
             print("\nAlright,")
             toggle = False
             Guesses = 0
+            sortedarray = []
             sortedarrayfillers = []
             sortedfile = open("sortedarray.txt", "r")
             for i in range(12972):
@@ -424,3 +476,5 @@ while endgame == False:
 
 print("\nOkay,\nThanks for using Adam's Wordle Bot!")
 time.sleep(10)
+
+
