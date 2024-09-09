@@ -131,12 +131,22 @@ temporary2 = ""
 temporary3 = ""
 
 
+def maximum():
+    global sortedarray
+    if len(sortedarray) < 8:
+        return len(sortedarray)
+    else:
+        return 8
+
+
 guesswordslist = []
 countersetletters = 0 #Amount of letters found in every one of the remaining words.
 def dynamic_percent_array():
     global sortedarrayfillers, letterinword, sortedarray, arrayfillerrewards, arrayfillerlettercounts, countersetletters, outputfiller2, temporary1, temporary2, temporary3
     countersetletters = 0
     wordtotalin = 0
+    sto = ""
+    internalflaglettercorrectplace = True
     arraysortedfillersresetable = []
     arrayfillerrewards = [0.0] * 26
     arrayofsorting = [0] * 26
@@ -150,7 +160,13 @@ def dynamic_percent_array():
     for i in range(26):
         arrayfillerrewards[i] = arrayfillerlettercounts[i]/len(sortedarray)
         if arrayfillerrewards[i] == 1.0:
-            countersetletters += 1
+            for m in range(5):
+                sto = mid(sortedarray[0], m, 1)
+                for h in range(maximum()):
+                    if mid(sortedarray[h], m, 1) != sto:
+                        internalflaglettercorrectplace = False
+                if internalflaglettercorrectplace == True:
+                    countersetletters += 1
         if arrayfillerrewards[i] == 0.0:
             arrayfillerrewards[i] = 1.5
     for i in range(len(sortedarrayfillers)):
@@ -284,7 +300,7 @@ playagain = ""
 playagain2 = True
 toggle = False
 endgame = False
-
+flagfiller = False
 # START OF MAIN CODE
 
 while endgame == False:
@@ -298,9 +314,11 @@ while endgame == False:
             elif len(yourword) == 5:
                 break
         while correctword != "yes" and correctword != "no" and correctword != "y" and correctword != "n":
-            if yourword == temporary1 or yourword == temporary2 or yourword == temporary3:
+            if (yourword == temporary1 or yourword == temporary2 or yourword == temporary3) and flagfiller == True:
                 print(f'''You've used the filler word "{yourword.title()}", please enter the colors that were returned:''')
+                flagfiller = False
                 break
+            flagfiller = False
             correctword = input(f'''Was the word "{yourword}" correct? ''').lower().strip()
             if correctword != "yes" and correctword != "no" and correctword != "y" and correctword != "n":
                 print("Incorrect Input, please give a yes or no answer.")
@@ -399,6 +417,7 @@ while endgame == False:
                     print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", and "{templist[2]}".''')
                 elif len(sortedarray) >= 4:
                     print(f'''In order, the most suitable guesses are: "{templist[0]}", "{templist[1]}", "{templist[2]}", and "{templist[3]}".''')
+                flagfiller = True
                 print(f'''However, I suggest you use a filler word here to narrow down the possibilities.\nHere are the 3 most suitable filler words: "{temporary1.title()}", "{temporary2.title()}", & "{temporary3.title()}".''')
             else:
                 if len(sortedarray) == 2:
