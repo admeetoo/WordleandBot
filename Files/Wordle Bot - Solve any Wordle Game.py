@@ -146,6 +146,7 @@ def dynamic_percent_array():
     countersetletters = 0
     wordtotalin = 0
     sto = ""
+    counter = 0
     internalflaglettercorrectplace = True
     arraysortedfillersresetable = []
     arrayfillerrewards = [0.0] * 26
@@ -159,16 +160,18 @@ def dynamic_percent_array():
                 arrayfillerlettercounts[chrToNum(mid(sortedarray[i], x, 1))] += 1
     for i in range(26):
         arrayfillerrewards[i] = arrayfillerlettercounts[i]/len(sortedarray)
-        if arrayfillerrewards[i] == 1.0:
-            for m in range(5):
-                sto = mid(sortedarray[0], m, 1)
-                for h in range(maximum()):
-                    if mid(sortedarray[h], m, 1) != sto:
-                        internalflaglettercorrectplace = False
-                if internalflaglettercorrectplace == True:
-                    countersetletters += 1
         if arrayfillerrewards[i] == 0.0:
             arrayfillerrewards[i] = 1.5
+    for i in range(5):
+        sto = mid(sortedarray[0], i, 1)
+        for x in range(maximum()):
+            if mid(sortedarray[x], i, 1) != sto:
+                internalflaglettercorrectplace = False
+        if internalflaglettercorrectplace == True:
+            if arrayfillerrewards[chrToNum(sto)] == 1.0:
+                countersetletters += 1
+        internalflaglettercorrectplace = True
+        sto = ""
     for i in range(len(sortedarrayfillers)):
         arrayofsorting = [0] * 26
         wordtotalin = 0
